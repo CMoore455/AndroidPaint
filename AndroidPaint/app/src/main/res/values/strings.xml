@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">AndroidPaint</string>
+    <string name="clear_canvas">Clear Canvas</string>
+    <string name="settings">Settings</string>
+    <string name="LblBrshSize">Change Brush Size</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="save">Save</string>
+    <string name="brushColor">Brush Color</string>
+    <string name="colorBlack">Black</string>
+    <string name="colorAccent">Pink-ish</string>
+    <string name="colorRed">Red</string>
+    <string name="colorBlue">Blue</string>
+    <string name="colorGreen">Green</string>
+    <string name="dashedPath">- - -</string>
+    <string name="normalPath">______</string>
+    <string name="pathStyle">Path Style</string>
+
+</resources>
