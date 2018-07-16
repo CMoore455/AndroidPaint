@@ -15,5 +15,8 @@
     <string name="dashedPath">- - -</string>
     <string name="normalPath">______</string>
     <string name="pathStyle">Path Style</string>
+    <string name="save_image">Save Image</string>
+    <string name="LblCanvasColor">Canvas Color</string>
+    <string name="fill_button">Fill</string>
 
 </resources>

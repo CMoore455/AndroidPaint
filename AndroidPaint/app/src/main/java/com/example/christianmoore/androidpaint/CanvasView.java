@@ -5,12 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
+import android.graphics.Point;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.text.BoringLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +29,7 @@ public class CanvasView extends View {
     private Path mPath;
     Context context;
     private Paint mPaint;
+
     private float mX, mY;
     private static final float TOLERANCE = 5;
     private float brushSize = 4f;
@@ -40,13 +44,9 @@ public class CanvasView extends View {
         // and we set a new Paint with the desired attributes
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-
         mPaint.setColor(Color.RED);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
-        Shader s = new Shader();
-        Matrix matrix = new Matrix();
-        mPaint.setShader(s);
         mPaint.setStrokeWidth(brushSize);
     }
 
@@ -86,6 +86,35 @@ public class CanvasView extends View {
         }
     }
 
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        float x = event.getX();
+//        float y = event.getY();
+//
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                if (canCreatePoints == true) {
+//                    create_point(x, y);
+//
+//                    if (mPoints.size() > 1) {
+//                        // start point
+//                        Point p = mPoints.get(mLastPointIndex);
+//                        mPath.moveTo(p.x, p.y);
+//                        // end point
+//                        p = mPoints.get(mLastPointIndex + 1);
+//                        mPath.lineTo(p.x, p.y);
+//                        mCanvas.drawPath(mPath, mPaint);
+//
+//                        undoPath.add(mPath);
+//
+//                        mPath.reset();
+//                        // increment point index
+//                        ++mLastPointIndex;
+//                    }
+//                }
+//        }
+//    }
+
     public void clearCanvas() {
         mPath.reset();
         invalidate();
@@ -117,9 +146,21 @@ public class CanvasView extends View {
             float[] f = new float[]{6f, 3f};
             DashPathEffect dashPathEffect = new DashPathEffect(f, 10f);
             mPaint.setPathEffect(dashPathEffect);
+
         }
         else{
             mPaint.setPathEffect(null);
+        }
+    }
+
+
+    public void fillStroke(boolean fill)
+    {
+        if(fill){
+            mPaint.setStyle(Paint.Style.FILL);
+        }
+        else{
+            mPaint.setStyle(Paint.Style.STROKE);
         }
     }
 

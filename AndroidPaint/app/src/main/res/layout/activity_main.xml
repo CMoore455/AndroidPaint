@@ -25,6 +25,14 @@
         android:text="@string/settings" />
 
 
+    <Button
+        android:id="@+id/saveImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:onClick="saveImage"
+        android:text="@string/save_image" />
+
     <com.example.christianmoore.androidpaint.CanvasView
         android:id="@+id/signature_canvas"
         android:layout_width="match_parent"
@@ -36,16 +44,14 @@
         android:layout_width="300dp"
         android:layout_height="419dp"
         android:layout_gravity="center|center"
+        android:background="@color/colorPrimary"
         android:onClick="openSettings"
         android:orientation="vertical"
-        android:background="@color/colorPrimary"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:columnCount="3"
-            android:rowCount="4"
             android:visibility="visible">
 
             <TextView
@@ -77,16 +83,16 @@
                 android:id="@+id/btnSave"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:layout_row="3"
+                android:layout_column="0"
+                android:layout_row="4"
                 android:onClick="saveSettingsClicked"
                 android:text="@string/save" />
 
 
-
             <TextView
-                android:layout_row="1"
                 android:layout_column="0"
-                android:text="@string/brushColor"/>
+                android:layout_row="1"
+                android:text="@string/brushColor" />
 
             <RadioGroup
                 android:id="@+id/ColorBrushRG"
@@ -101,6 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/colorBlack"
+                    android:checked="true"
                     android:textColor="@color/colorBlack" />
 
                 <RadioButton
@@ -115,44 +122,98 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/colorGreen"
-                    android:textColor="@color/colorGreen"/>
+                    android:textColor="@color/colorGreen" />
 
                 <RadioButton
                     android:id="@+id/RBtnBlue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/colorBlue"
-                    android:textColor="@color/colorBlue"/>
+                    android:textColor="@color/colorBlue" />
 
                 <RadioButton
                     android:id="@+id/RBtnAccent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/colorAccent"
-                    android:textColor="@color/colorAccent"/>
-
+                    android:textColor="@color/colorAccent" />
             </RadioGroup>
+
             <TextView
-                android:layout_row="2"
                 android:layout_column="0"
-                android:text="@string/pathStyle"
-                />
-            <RadioGroup
                 android:layout_row="2"
+                android:text="@string/LblCanvasColor"
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:id="@+id/ColorCanvasRG"
+                android:layout_width="288dp"
+                android:layout_column="1"
+                android:layout_columnSpan="2"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/RBtnBlackCanvas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorBlack"
+                    android:textColor="@color/colorBlack" />
+
+                <RadioButton
+                    android:id="@+id/RBtnRedCanvas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorRed"
+                    android:textColor="@color/colorRed" />
+
+                <RadioButton
+                    android:id="@+id/RBtnGreenCanvas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorGreen"
+                    android:textColor="@color/colorGreen" />
+
+                <RadioButton
+                    android:id="@+id/RBtnWhiteCanvas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    android:checked="true"
+                    android:textColor="@color/colorWhite" />
+            </RadioGroup>
+
+
+            <TextView
+                android:layout_column="0"
+                android:layout_row="3"
+                android:text="@string/pathStyle" />
+
+            <RadioGroup
+                android:id="@+id/pathEffectRadioButtonGroup"
                 android:layout_column="1"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:text="@string/dashedPath"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-                <RadioButton
-                    android:text="@string/normalPath"
+                    android:id="@+id/dashedButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingBottom="10dp"/>
+                    android:text="@string/dashedPath" />
+
+                <RadioButton
+                    android:id="@+id/regualarButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="10dp"
+                    android:text="@string/normalPath" />
             </RadioGroup>
+
+            <RadioButton
+                android:id="@+id/fillButton"
+                android:layout_width="62dp"
+                android:layout_column="1"
+                android:layout_row="4"
+                android:textAlignment="@string/fill_button" />
         </GridLayout>
 
 
