@@ -18,6 +18,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
 // Code from https://examples.javacodegeeks.com/android/core/graphics/canvas-graphics/android-canvas-example/
 
 public class CanvasView extends View {
@@ -25,14 +27,21 @@ public class CanvasView extends View {
     public int width;
     public int height;
     private Bitmap mBitmap;
+    private boolean makeCircle = false;
     private Canvas mCanvas;
-    private Path mPath;
-    Context context;
+    private Path mPath;;
+    private Context context;
     private Paint mPaint;
-
     private float mX, mY;
     private static final float TOLERANCE = 5;
-    private float brushSize = 4f;
+    private float brushSize = 10f;
+    private Paint.Style style;
+    private int color = Color.RED;
+    private boolean addCircle = false;
+
+    private ArrayList<Paint> paints = new ArrayList<>();
+    private ArrayList<Path> paths = new ArrayList<>();
+
 
     public CanvasView(Context c, AttributeSet attrs) {
         super(c, attrs);
@@ -40,14 +49,15 @@ public class CanvasView extends View {
 
         // we set a new Path
         mPath = new Path();
-
         // and we set a new Paint with the desired attributes
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.RED);
-        mPaint.setStyle(Paint.Style.STROKE);
+        style = Paint.Style.STROKE;
+        mPaint.setStyle(style);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeWidth(brushSize);
+
     }
 
     // override onSizeChanged
@@ -65,7 +75,10 @@ public class CanvasView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // draw the mPath with the mPaint on the canvas when onDraw
-        canvas.drawPath(mPath, mPaint);
+        for(int i = 0; i < paints.size(); i++){
+            canvas.drawPath(paths.get(i), paints.get(i));
+        }
+
     }
 
     // when ACTION_DOWN start touch according to the x,y values
@@ -86,58 +99,36 @@ public class CanvasView extends View {
         }
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        float x = event.getX();
-//        float y = event.getY();
-//
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                if (canCreatePoints == true) {
-//                    create_point(x, y);
-//
-//                    if (mPoints.size() > 1) {
-//                        // start point
-//                        Point p = mPoints.get(mLastPointIndex);
-//                        mPath.moveTo(p.x, p.y);
-//                        // end point
-//                        p = mPoints.get(mLastPointIndex + 1);
-//                        mPath.lineTo(p.x, p.y);
-//                        mCanvas.drawPath(mPath, mPaint);
-//
-//                        undoPath.add(mPath);
-//
-//                        mPath.reset();
-//                        // increment point index
-//                        ++mLastPointIndex;
-//                    }
-//                }
-//        }
-//    }
+    public void undo(){
+        if (paints.size() > 0) {
+            paints.remove(paints.size()-1);
+            paths.remove(paths.size()-1);
+            artificialTouch();
+        }
+    }
 
     public void clearCanvas() {
-        mPath.reset();
+        paths.clear();
+        paints.clear();
         invalidate();
     }
 
     // when ACTION_UP stop touch
     private void upTouch() {
         mPath.lineTo(mX, mY);
+        resetPaint();
     }
 
-    public void increaseBrushSize(){
-        mPaint.setStrokeWidth(brushSize+=5f);
-    }
-
-    public void decreaseBrushSize(){
-        mPaint.setStrokeWidth(brushSize-=5f);
-    }
-
-    public void ChangeBrushColor(String color){
-        mPaint.setColor(Color.parseColor(color));
+    public void ChangeBrushSize(float f){
+        mPaint.setStrokeWidth(f);
+        setBrushSize(f);
     }
 
     public void ChangeBrushColor(int color){
+        mPaint.setAntiAlias(true);
+        mPaint.setStyle(style);
+        mPaint.setStrokeJoin(Paint.Join.ROUND);
+        this.color = color;
         mPaint.setColor(color);
     }
 
@@ -164,7 +155,17 @@ public class CanvasView extends View {
         }
     }
 
+    public void resetPaint(){
+        // and we set a new Paint with the desired attributes
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setColor(getColor());
+        mPaint.setStyle(getStyle());
+        mPaint.setStrokeJoin(Paint.Join.ROUND);
+        mPaint.setStrokeWidth(getBrushSize());
+    }
     //override the onTouchEvent
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
@@ -172,7 +173,18 @@ public class CanvasView extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                mPath = new Path();
+
+                if (makeCircle) {
+                    mX = x;
+                    mY = y;
+                    mPath.addCircle(mX, mY, 120f, Path.Direction.CCW);
+                    makeCircle = false;
+                }
+
                 startTouch(x, y);
+                paints.add(mPaint);
+                paths.add(mPath);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -185,5 +197,47 @@ public class CanvasView extends View {
                 break;
         }
         return true;
+    }
+
+    private void artificialTouch() {
+       //mPath = new Path();
+        startTouch(mX, mY);
+        //paints.add(mPaint);
+        //paths.add(mPath);
+        moveTouch(mX, mY);
+        upTouch();
+        invalidate();
+    }
+
+    public void createCircle(){
+        makeCircle = true;
+    }
+
+    public float getBrushSize() {
+        return brushSize;
+    }
+
+    public void setBrushSize(float brushSize) {
+        this.brushSize = brushSize;
+        mPaint.setStrokeWidth(brushSize);
+
+    }
+
+    public Paint.Style getStyle() {
+        return style;
+    }
+
+    public void setStyle(Paint.Style style) {
+        this.style = style;
+        mPaint.setStyle(this.style);
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        mPaint.setColor(this.color);
     }
 }

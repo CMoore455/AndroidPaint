@@ -18,5 +18,7 @@
     <string name="save_image">Save Image</string>
     <string name="LblCanvasColor">Canvas Color</string>
     <string name="fill_button">Fill</string>
-
+    <string name="circle_button">Circle</string>
+    <string name="undo">Undo</string>
+    <string name="randomize">Randomize!</string>
 </resources>
